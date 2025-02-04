@@ -9,7 +9,7 @@ public partial class User22Context : DbContext
 {
     public User22Context()
     {
-    }
+    } 
 
     public User22Context(DbContextOptions<User22Context> options)
         : base(options)
