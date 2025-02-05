@@ -1,6 +1,8 @@
-﻿using DEMO2025_Shed.Tools;
-using DEMO2025_Shed.View;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -11,18 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace DEMO2025_Shed
+namespace DEMO2025_Shed.View
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Логика взаимодействия для Main.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class Main : Page
     {
-        public MainWindow()
+        public Main()
         {
             InitializeComponent();
-            DataContext = Nav.Inst();
-            Nav.Inst().CurrentPage = new Auth();
         }
     }
 }

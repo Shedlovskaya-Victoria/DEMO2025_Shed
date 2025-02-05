@@ -8,6 +8,7 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Auth">
    <Grid>
+       <!--первая авторизация-->
         <StackPanel Visibility="{Binding VisibilStep1_Auth}">
             <Label Content="Login" />
             <TextBox Text="{Binding Login}"/>
@@ -15,12 +16,18 @@
             <PasswordBox x:Name="password"/>
             <Button Content="Войти" Click="AuthInter"/>
         </StackPanel>
+       <!--смена пароля-->
         <StackPanel Visibility="{Binding VisibilStep2_ChangePassword}">
             <Label Content="Old password" />
             <PasswordBox x:Name="oldPassword"/>
             <Label Content="New password" />
             <PasswordBox x:Name="newPassword"/>
+            <Label Content="Please, repit new password" />
+            <PasswordBox x:Name="isTruePassword"/>
             <Button Content="Изменить пароль" Click="ChangePassword"/>
+        </StackPanel>
+        <StackPanel Visibility="{Binding Visible_BlockPanel}" >
+            <Label x:Name="BlockLabel" Background="LightGray" Width="400" Height="200"/>
         </StackPanel>
     </Grid>
 </Page>

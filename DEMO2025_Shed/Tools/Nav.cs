@@ -11,7 +11,7 @@ namespace DEMO2025_Shed.Tools
     {
        public Page CurrentPage { get; set; }
        static Nav nav;
-        public static Nav GetInst()
+        public static Nav Inst()
         {
             if(nav == null) nav = new Nav();
             return nav;

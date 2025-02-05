@@ -15,6 +15,8 @@ public partial class User
 
     public string Password { get; set; } = null!;
 
+    public bool? IsBlocked { get; set; }
+
     public virtual ICollection<AdditionalProductClientsCross> AdditionalProductClientsCrosses { get; set; } = new List<AdditionalProductClientsCross>();
 
     public virtual ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
