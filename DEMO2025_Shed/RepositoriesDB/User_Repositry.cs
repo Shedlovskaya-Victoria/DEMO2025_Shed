@@ -11,7 +11,7 @@ namespace DEMO2025_Shed.RepositoriesDB
     {
         public static string Block_Repository(string login)
         {
-            BD.Inst().Users.Find(s=>s.Login == login).IsBlocked = true;
+            BD.Inst().Users.FirstOrDefault(s=>s.Login == login).IsBlocked = true;
             BD.Save();
             return SystemMessages.BlockAuth;
         }
