@@ -44,7 +44,7 @@ namespace DEMO2025_Shed.View
             VisibilStep1_Auth = Visibility.Visible;
         }
 
-        private void AuthInter(object sender, RoutedEventArgs e)
+        private void AuthInter(object sender, RoutedEventArgs e) 
         {
             if (BlockAccount()) 
             {
