@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using DEMO2025_Shed.ModelBD;
+using DEMO2025_Shed.ModelDB;
 using Microsoft.EntityFrameworkCore;
 
 namespace DEMO2025_Shed;

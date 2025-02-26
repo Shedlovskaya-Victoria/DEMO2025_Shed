@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DEMO2025_Shed.ModelBD;
+namespace DEMO2025_Shed.ModelDB;
 
 public partial class User
 {
@@ -15,7 +15,11 @@ public partial class User
 
     public string Password { get; set; } = null!;
 
-    public bool? IsBlocked { get; set; }
+    public bool IsBlocked { get; set; }
+
+    public DateOnly DateCreate { get; set; }
+
+    public DateOnly? DateUpdate { get; set; }
 
     public virtual ICollection<AdditionalProductClientsCross> AdditionalProductClientsCrosses { get; set; } = new List<AdditionalProductClientsCross>();
 

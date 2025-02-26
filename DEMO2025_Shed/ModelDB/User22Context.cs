@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace DEMO2025_Shed.ModelBD;
+namespace DEMO2025_Shed.ModelDB;
 
 public partial class User22Context : DbContext
 {

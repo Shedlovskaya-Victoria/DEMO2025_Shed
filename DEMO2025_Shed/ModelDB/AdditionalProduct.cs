@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DEMO2025_Shed.ModelBD;
+namespace DEMO2025_Shed.ModelDB;
 
 public partial class AdditionalProduct
 {

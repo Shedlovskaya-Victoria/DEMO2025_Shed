@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DEMO2025_Shed.ModelBD;
+namespace DEMO2025_Shed.ModelDB;
 
-public partial class CategoriesRoom
+public partial class RoomsStatus
 {
-    public int CategoryId { get; set; }
+    public int StatusId { get; set; }
 
     public string Title { get; set; } = null!;
 
