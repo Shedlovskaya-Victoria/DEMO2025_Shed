@@ -46,7 +46,7 @@ namespace DEMO2025_Shed.View
 
         private void AuthInter(object sender, RoutedEventArgs e)
         {
-            if (BlockAccount())
+            if (BlockAccount()) 
             {
                 if (string.IsNullOrEmpty(Login))
                 { 
