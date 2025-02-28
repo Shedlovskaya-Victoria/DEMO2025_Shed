@@ -22,11 +22,13 @@ namespace DEMO2025_Shed.RepositoriesDB
             return SystemMessages.BlockAuth;
         }
 
-        public static bool CheckAuthorisateForMounthAfterCreate(User user)
+        public static bool CheckAuthorisateForMounthAfterCreate(string login)
         {
-            
+            var user = BD.Inst().Users.FirstOrDefault(s => s.Login == login);
+
             var daysInMonth = DateTime.DaysInMonth(user.DateCreate.Year, user.DateCreate.Month);
             var controlAuthorizateDate = user.DateCreate.AddDays(daysInMonth);
+
             if (user.IsBlocked == false & DateOnly.FromDateTime(DateTime.Now.Date) >= controlAuthorizateDate)
             {
                 user.IsBlocked = true;
@@ -36,29 +38,45 @@ namespace DEMO2025_Shed.RepositoriesDB
             else
                 return false;
         }
-        public static (string, bool) Authorizate(string login, PasswordBox password)
+        public static string Authorizate(string login, PasswordBox password)
         {
             var data = BD.Inst().Users.FirstOrDefault(s => s.Login == login && s.Password == password.Password);
             if (data == null)
             {
-                return (SystemMessages.FalseAuth, false);
+                return SystemMessages.FalseAuth;
             }
-            if (User_Repositry.CheckAuthorisateForMounthAfterCreate(data))
-            {
-                return (SystemMessages.BlockAuth, false);
-            }
+
+            return SystemMessages.SucessAuth;
+        }
+        public static bool IsNeedChangePassword(string login)
+        {
+            var data = BD.Inst().Users.FirstOrDefault(s => s.Login == login);
             if (data.DateUpdate == null)
             {
-                return (SystemMessages.SucessAuth, true);
+                return  true;
             }
-            return (SystemMessages.SucessAuth, false);
+            else
+                return false ;
         }
 
         public static string ChangePassword(string login, PasswordBox newPassword)
         {
+            var user = BD.Inst().Users.FirstOrDefault(s => s.Login == login & s.Password == newPassword.Password);
+            if (user != null)
+                return SystemMessages.PasswordIsAlreadyExists;
             BD.Inst().Users.First(s => s.Login == login).Password = newPassword.Password;
+            BD.Inst().Users.First(s => s.Login == login).DateUpdate = DateOnly.FromDateTime(DateTime.UtcNow);
             BD.Save();
             return SystemMessages.SucessAuth;
+        }
+        public static bool IsExistsUser(string login)
+        {
+            var data = BD.Inst().Users.FirstOrDefault(u => u.Login == login);
+
+            if (data == null)
+                return true;
+            else
+                return false;
         }
     }
 }

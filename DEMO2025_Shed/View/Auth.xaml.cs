@@ -25,14 +25,29 @@ namespace DEMO2025_Shed.View
     /// </summary>
     public partial class Auth : Page, INotifyPropertyChanged
     {
-        public string Login { get; set; } 
+        public string Login { get; set; }
         private int countTries;
+        private Visibility visibilStep1_Auth;
+        private Visibility visible_BlockPanel;
+        private Visibility visibilStep2_ChangePassword;
 
         public event PropertyChangedEventHandler? PropertyChanged;
         public void Signal([CallerMemberName] string prop = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
-        public Visibility VisibilStep1_Auth { get; set; } 
-        public Visibility VisibilStep2_ChangePassword { get; set; } 
-        public Visibility Visible_BlockPanel { get; set; } 
+        public Visibility VisibilStep1_Auth
+        {
+            get => visibilStep1_Auth;
+            set { visibilStep1_Auth = value; Signal(); }
+        }
+        public Visibility VisibilStep2_ChangePassword
+        {
+            get => visibilStep2_ChangePassword;
+            set { visibilStep2_ChangePassword = value; Signal(); }
+        }
+        public Visibility Visible_BlockPanel
+        {
+            get => visible_BlockPanel;
+            set { visible_BlockPanel = value; Signal(); }
+        }
         public Auth()
         {
             InitializeComponent();
@@ -44,15 +59,21 @@ namespace DEMO2025_Shed.View
             VisibilStep1_Auth = Visibility.Visible;
         }
 
-        private void AuthInter(object sender, RoutedEventArgs e) 
+        private void AuthInter(object sender, RoutedEventArgs e)
         {
-            if (BlockAccount()) 
+            if (BlockAccount())
             {
                 if (string.IsNullOrEmpty(Login))
-                { 
+                {
                     countTries++;
                     MessageBox.Show(SystemMessages.FalseAuth);
                     return;
+                }
+                //сущеcтвует ли логин
+                else if (User_Repositry.IsExistsUser(Login))
+                {
+                    MessageBox.Show(SystemMessages.UserNotExists);
+                    countTries++;
                 }
                 else if (string.IsNullOrEmpty(password.Password))
                 {
@@ -60,11 +81,20 @@ namespace DEMO2025_Shed.View
                     MessageBox.Show(SystemMessages.FalseAuth);
                     return;
                 }
-
-                var result = User_Repositry.Authorizate(Login, password);
-                if (result.Item1 == SystemMessages.SucessAuth)
+                //не прошел ли месяц спустя создания логина
+                if (User_Repositry.CheckAuthorisateForMounthAfterCreate(Login))
                 {
-                    if (result.Item2)  //проверка была ли уже первая авторизация и смена пароля пользователем
+                    MessageBox.Show(SystemMessages.BlockAuth);
+                    return;
+                }
+                //авторизация
+                var result = User_Repositry.Authorizate(Login, password);
+                //не меняли ли мы уже пароль
+                var needChangePassword = User_Repositry.IsNeedChangePassword(Login);
+
+                if (result == SystemMessages.SucessAuth)
+                {
+                    if (needChangePassword)
                     {
                         VisibilStep1_Auth = Visibility.Hidden;
                         VisibilStep2_ChangePassword = Visibility.Visible;
@@ -76,7 +106,7 @@ namespace DEMO2025_Shed.View
                 }
                 else
                 {
-                    MessageBox.Show(result.Item1);
+                    MessageBox.Show(result);
                     countTries++;
                     BlockAccount();
                 }
@@ -88,45 +118,44 @@ namespace DEMO2025_Shed.View
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ChangePassword(object sender, RoutedEventArgs e)
         {
-            if (BlockAccount())
+            if (string.IsNullOrEmpty(oldPassword.Password))
             {
-                if (string.IsNullOrEmpty(oldPassword.Password))
-                {
-                    countTries++;
-                    MessageBox.Show(SystemMessages.FalseAuth);
-                    return;
-                }
-                else if (string.IsNullOrEmpty(newPassword.Password))
-                {
-                    countTries++;
-                    MessageBox.Show(SystemMessages.FalseAuth);
-                    return;
-                }
-                else if (string.IsNullOrEmpty(isTruePassword.Password))
-                {
-                    countTries++;
-                    MessageBox.Show(SystemMessages.FalseAuth);
-                    return;
-                }
-
-                if (newPassword.Password == isTruePassword.Password)
-                {
-                    var result = User_Repositry.ChangePassword(Login, newPassword);
-                    MessageBox.Show(result);
-                    if (result == SystemMessages.SucessAuth)
-                    {
-                        goToMainPage();
-                    }
-                }
+                MessageBox.Show(SystemMessages.FalseAuth);
+                return;
             }
-            else
+            else if (string.IsNullOrEmpty(newPassword.Password))
             {
-                //
+                MessageBox.Show(SystemMessages.FalseAuth);
+                return;
+            }
+            else if (string.IsNullOrEmpty(isTruePassword.Password))
+            {
+                MessageBox.Show(SystemMessages.FalseAuth);
+                return;
+            }
+
+            if (newPassword.Password == isTruePassword.Password)
+            {
+                var result = User_Repositry.ChangePassword(Login, newPassword);
+                MessageBox.Show(result);
+                if (result == SystemMessages.SucessAuth)
+                {
+                    goToMainPage();
+                }
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         private bool BlockAccount()
         {
             if (countTries == 3)
@@ -135,8 +164,7 @@ namespace DEMO2025_Shed.View
                 VisibilStep1_Auth = Visibility.Hidden;
                 Visible_BlockPanel = Visibility.Visible;
                 BlockLabel.Content = User_Repositry.Block_Repository(Login);
-                Signal(nameof(VisibilStep1_Auth));
-                Signal(nameof(Visible_BlockPanel));
+
                 return false;
             }
             else

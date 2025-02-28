@@ -9,6 +9,6 @@
       Title="Main">
 
     <Grid>
-        
+        <Label Content="Home Page"/>
     </Grid>
 </Page>
